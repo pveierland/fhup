@@ -91,17 +91,6 @@ let
                   modules = config.finalModules;
                 };
 
-              standaloneConfig = lib.recursiveUpdate baseConfig (
-                withSystem "x86_64-linux" (
-                  { system, lib, ... }:
-                  {
-                    modules = baseConfig.modules ++ home-manager.standaloneModules;
-                    pkgs = nixpkgs.input.legacyPackages.${system};
-                    inherit lib;
-                  }
-                )
-              );
-
               hostConfigs = lib.mapAttrs'
                 (
                   hostName:
@@ -127,10 +116,7 @@ let
                 )
                 user.home-manager.hosts;
             in
-            lib.mkMerge [
-              (lib.mkIf config.enable { ${user.name} = standaloneConfig; })
-              hostConfigs
-            ];
+            hostConfigs;
         };
       }
     );
@@ -195,12 +181,6 @@ in
               type = types.listOf types.deferredModule;
               default = [ ];
               description = "Modules that will be loaded in all home manager configurations";
-            };
-
-            standaloneModules = mkOption {
-              type = types.listOf types.deferredModule;
-              default = [ ];
-              description = "Modules that will only be loaded in standalone home manager configurations";
             };
           };
 

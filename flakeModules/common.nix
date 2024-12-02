@@ -31,7 +31,6 @@ in
 
     fhup.home-manager = {
       inherit (cfg) modules;
-      standaloneModules = cfg.exclusiveModules;
     };
 
     fhup.nixos.modules = lib.mkMerge [
